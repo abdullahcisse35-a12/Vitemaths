@@ -112,6 +112,42 @@
       border: none;
       cursor: pointer;
       font-weight: bold;
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      transition: all 0.2s ease;
+    }
+
+    .lang-toggle button:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .lang-toggle button.active {
+      background: white;
+      color: #2563eb;
+    }
+
+    /* Smooth transition for content changes */
+    #title, #subtitle, .card h2, .card p, .card ul, .btn, #footer-text {
+      transition: opacity 0.2s ease;
+    }
+
+    /* Mobile responsiveness */
+    @media (max-width: 600px) {
+      header h1 {
+        font-size: 1.8rem;
+      }
+
+      header p {
+        font-size: 1rem;
+      }
+
+      .buttons {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+      }
     }
   </style>
 </head>
@@ -125,8 +161,8 @@
   </p>
 
   <div class="lang-toggle">
-    <button onclick="setLanguage('en')">English</button>
-    <button onclick="setLanguage('fr')">Français</button>
+    <button onclick="setLanguage('en')" id="lang-en" class="active">English</button>
+    <button onclick="setLanguage('fr')" id="lang-fr">Français</button>
   </div>
 </header>
 
@@ -137,7 +173,8 @@
     <p id="section1-text">
       ViteMaths connects students with experienced tutors who hold a degree in mathematics
       or a closely related field and have strong mastery of high-level math.
-       — You are matched with a qualified, independent tutor selected to best fit your academic goals.
+      <strong>You are not being tutored by the website owner</strong> — you are matched with
+      a qualified, independent tutor.
     </p>
   </div>
 
@@ -163,11 +200,11 @@
         Enroll Now
       </a>
 
-      <a href="#" class="btn btn-secondary" onclick="sendWhatsApp(true)" id="trial-btn">
+      <a href="#" class="btn btn-secondary" onclick="sendWhatsApp(true); return false;" id="trial-btn">
         Free 1-Hour Trial
       </a>
 
-      <a href="#" class="btn btn-outline" onclick="sendWhatsApp(false)" id="contact-btn">
+      <a href="#" class="btn btn-outline" onclick="sendWhatsApp(false); return false;" id="contact-btn">
         Contact on WhatsApp
       </a>
     </div>
@@ -187,30 +224,42 @@
       title: "ViteMaths",
       subtitle: "Professional math tutoring with degree-qualified tutors — fast, flexible, and exam-focused.",
       section1Title: "Who We Are",
-      section1Text: "ViteMaths connects students with experienced tutors who hold a degree in mathematics or a closely related field and have strong mastery of high-level math. You are not being tutored by the website owner — you are matched with a qualified, independent tutor.",
+      section1Text: "ViteMaths connects students with experienced tutors who hold a degree in mathematics or a closely related field and have strong mastery of high-level math. <strong>You are not being tutored by the website owner</strong> — you are matched with a qualified, independent tutor.",
       section2Title: "What We Help With",
+      section2List: [
+        "Middle & High School Mathematics",
+        "IB, A-Levels, SAT, AP Math",
+        "Calculus, Algebra, Geometry, Trigonometry",
+        "Exam preparation & last-minute revision"
+      ],
       section3Title: "Get Started",
       section3Text: "Need help before exams? Book a session or try a free trial class today.",
       enroll: "Enroll Now",
       trial: "Free 1-Hour Trial",
       contact: "Contact on WhatsApp",
       footer: "© 2026 ViteMaths · Online tutoring made simple",
-      whatsappTrial: "Hello! I’m interested in the FREE 1-hour math trial class. Could you give me more information?",
-      whatsappNormal: "Hello! I’m interested in math tutoring through ViteMaths. Could you give me more details?"
+      whatsappTrial: "Hello! I'm interested in the FREE 1-hour math trial class. Could you give me more information?",
+      whatsappNormal: "Hello! I'm interested in math tutoring through ViteMaths. Could you give me more details?"
     },
     fr: {
       title: "ViteMaths",
       subtitle: "Soutien scolaire en mathématiques avec des tuteurs diplômés — rapide, flexible et efficace.",
       section1Title: "Qui sommes-nous",
-      section1Text: "ViteMaths met en relation les élèves avec des tuteurs expérimentés titulaires d’un diplôme en mathématiques ou dans un domaine proche, avec une solide maîtrise des mathématiques avancées. Vous êtes mis(e) en relation avec un tuteur qualifié et indépendant, choisi pour répondre au mieux à vos objectifs académiques.",
+      section1Text: "ViteMaths met en relation les élèves avec des tuteurs expérimentés titulaires d'un diplôme en mathématiques ou dans un domaine proche, avec une solide maîtrise des mathématiques avancées. <strong>Vous n'êtes pas encadré par le propriétaire du site</strong> — mais par un tuteur qualifié et indépendant.",
       section2Title: "Nos domaines",
+      section2List: [
+        "Mathématiques collège & lycée",
+        "IB, A-Levels, SAT, AP Math",
+        "Calcul, Algèbre, Géométrie, Trigonométrie",
+        "Préparation aux examens & révisions de dernière minute"
+      ],
       section3Title: "Commencer",
-      section3Text: "Besoin d’aide avant les examens ? Réservez un cours ou essayez une séance gratuite.",
-      enroll: "S’inscrire",
-      trial: "Essai gratuit d’1 heure",
+      section3Text: "Besoin d'aide avant les examens ? Réservez un cours ou essayez une séance gratuite.",
+      enroll: "S'inscrire",
+      trial: "Essai gratuit d'1 heure",
       contact: "Contacter sur WhatsApp",
       footer: "© 2026 ViteMaths · Le soutien scolaire simplifié",
-      whatsappTrial: "Bonjour ! Je suis intéressé(e) par le cours d’essai GRATUIT d’une heure en mathématiques. Pouvez-vous me donner plus d’informations ?",
+      whatsappTrial: "Bonjour ! Je suis intéressé(e) par le cours d'essai GRATUIT d'une heure en mathématiques. Pouvez-vous me donner plus d'informations ?",
       whatsappNormal: "Bonjour ! Je suis intéressé(e) par des cours de mathématiques via ViteMaths. Pouvez-vous me donner plus de détails ?"
     }
   };
@@ -221,17 +270,30 @@
     currentLang = lang;
     const t = translations[lang];
 
+    // Update language button states
+    document.getElementById("lang-en").classList.toggle("active", lang === "en");
+    document.getElementById("lang-fr").classList.toggle("active", lang === "fr");
+
+    // Update text content
     document.getElementById("title").innerText = t.title;
     document.getElementById("subtitle").innerText = t.subtitle;
     document.getElementById("section1-title").innerText = t.section1Title;
-    document.getElementById("section1-text").innerText = t.section1Text;
+    document.getElementById("section1-text").innerHTML = t.section1Text; // Changed to innerHTML for <strong> tag
     document.getElementById("section2-title").innerText = t.section2Title;
+    
+    // Update list items
+    const listElement = document.getElementById("section2-list");
+    listElement.innerHTML = t.section2List.map(item => `<li>${item}</li>`).join('');
+    
     document.getElementById("section3-title").innerText = t.section3Title;
     document.getElementById("section3-text").innerText = t.section3Text;
     document.getElementById("enroll-btn").innerText = t.enroll;
     document.getElementById("trial-btn").innerText = t.trial;
     document.getElementById("contact-btn").innerText = t.contact;
     document.getElementById("footer-text").innerText = t.footer;
+
+    // Update HTML lang attribute for accessibility
+    document.documentElement.lang = lang;
   }
 
   function sendWhatsApp(isTrial) {
@@ -240,6 +302,7 @@
     window.open(`https://wa.me/${phoneNumber}?text=${message}`, "_blank");
   }
 
+  // Initialize on page load
   setLanguage(currentLang);
 </script>
 
