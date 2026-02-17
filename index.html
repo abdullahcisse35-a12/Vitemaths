@@ -70,16 +70,19 @@
       display: inline-block;
       text-align: center;
       transition: transform 0.15s ease, box-shadow 0.15s ease;
+      cursor: pointer;
     }
 
     .btn-primary {
       background: #2563eb;
       color: white;
+      border: none;
     }
 
     .btn-secondary {
       background: #16a34a;
       color: white;
+      border: none;
     }
 
     .btn-outline {
@@ -126,9 +129,29 @@
       color: #2563eb;
     }
 
-    /* Smooth transition for content changes */
-    #title, #subtitle, .card h2, .card p, .card ul, .btn, #footer-text {
-      transition: opacity 0.2s ease;
+    #popin-form input,
+    #popin-form select {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 12px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 1rem;
+      box-sizing: border-box;
+    }
+
+    #popin-form label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 4px;
+    }
+
+    #price {
+      font-size: 1.4rem;
+      font-weight: bold;
+      color: #1e40af;
+      margin: 10px 0;
     }
 
     /* Mobile responsiveness */
@@ -147,6 +170,7 @@
 
       .btn {
         width: 100%;
+        box-sizing: border-box;
       }
     }
   </style>
@@ -181,10 +205,10 @@
   <div class="card">
     <h2 id="section2-title">What We Help With</h2>
     <ul id="section2-list">
-      <li>Middle & High School Mathematics</li>
+      <li>Middle &amp; High School Mathematics</li>
       <li>IB, A-Levels, SAT, AP Math</li>
       <li>Calculus, Algebra, Geometry, Trigonometry</li>
-      <li>Exam preparation & last-minute revision</li>
+      <li>Exam preparation &amp; last-minute revision</li>
     </ul>
   </div>
 
@@ -210,10 +234,61 @@
     </div>
   </div>
 
-</div>
+  <!-- FIX: Moved pop-in and testimonial cards INSIDE .container, OUTSIDE footer -->
 
-<footer id="footer-text">
-  © 2026 ViteMaths · Online tutoring made simple
+  <div class="card">
+    <h2 id="popin-title">Quick Pop-In Class</h2>
+    <p id="popin-desc">
+      Book a one-time session instantly. Choose duration and type — price shown automatically.
+    </p>
+
+    <button class="btn btn-primary" onclick="openPopin()" id="popin-open-btn">Book Pop-In Class</button>
+
+    <div id="popin-form" style="display:none; margin-top:20px;">
+      <form name="popin" method="POST" data-netlify="true">
+        <input type="hidden" name="form-name" value="popin">
+
+        <input type="text" name="name" placeholder="Name" required>
+        <input type="tel" name="phone" placeholder="Phone" required>
+        <input type="text" name="address" placeholder="Address (if home class)">
+
+        <label id="type-label">Class Type</label>
+        <select id="type" name="type" onchange="calcPrice()">
+          <option value="online">Online</option>
+          <option value="home">In Person</option>
+        </select>
+
+        <label id="duration-label">Duration</label>
+        <select id="duration" name="duration" onchange="calcPrice()">
+          <option value="1">1 Hour</option>
+          <option value="2">2 Hours</option>
+        </select>
+
+        <input type="date" name="day" required>
+        <input type="time" name="time" required>
+
+        <h3 id="price">8 000 CFA</h3>
+
+        <button class="btn btn-secondary" type="submit" id="submit-book">
+          Send Booking
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2 id="test-title">What Students Say</h2>
+    <p id="test-text">
+      "I used to struggle with math and had trouble grasping concepts. The one-on-one sessions with these tutors — who are certified with degrees — really helped me because it's such a focused setting. I went from having a 78 average all the way to winning Math Olympiad awards. I couldn't have done it without ViteMaths."
+    </p>
+    <p style="font-weight:bold; color:#1e40af; margin-top: -5px;" id="test-name">— Ndeye Natou Cissé, 1st Place Winner · 2025 Math Olympiad</p>
+    <img src="olympiad.png" alt="Math Olympiad trophy and certificate" style="width:100%; max-width:520px; border-radius:10px; margin-top:15px; display:block;">
+  </div>
+
+</div><!-- end .container -->
+
+<footer>
+  <span id="footer-text">© 2026 ViteMaths · Online tutoring made simple</span>
 </footer>
 
 <script>
@@ -237,6 +312,12 @@
       enroll: "Enroll Now",
       trial: "Free 1-Hour Trial",
       contact: "Contact on WhatsApp",
+      popinTitle: "Quick Pop-In Class",
+      popinDesc: "Book a one-time session instantly. Choose duration and type — price shown automatically.",
+      popinBtn: "Book Pop-In Class",
+      testTitle: "What Students Say",
+      testText: '"I used to struggle with math and had trouble grasping concepts. The one-on-one sessions with these tutors — who are certified with degrees — really helped me because it\'s such a focused setting. I went from having a 78 average all the way to winning Math Olympiad awards. I couldn\'t have done it without ViteMaths."',
+      testName: "— Ndeye Natou Cissé, 1st Place Winner · 2025 Math Olympiad",
       footer: "© 2026 ViteMaths · Online tutoring made simple",
       whatsappTrial: "Hello! I'm interested in the FREE 1-hour math trial class. Could you give me more information?",
       whatsappNormal: "Hello! I'm interested in math tutoring through ViteMaths. Could you give me more details?"
@@ -258,6 +339,12 @@
       enroll: "S'inscrire",
       trial: "Essai gratuit d'1 heure",
       contact: "Contacter sur WhatsApp",
+      popinTitle: "Cours ponctuel",
+      popinDesc: "Réservez une séance unique instantanément. Choisissez la durée et le type — le prix s'affiche automatiquement.",
+      popinBtn: "Réserver un cours",
+      testTitle: "Ce que disent nos élèves",
+      testText: "« J'avais du mal en mathématiques et je n'arrivais pas à saisir les concepts. Les séances individuelles avec ces tuteurs diplômés m'ont vraiment aidée grâce à un cadre très concentré. Je suis passée d'une moyenne de 78 à remporter des prix aux Olympiades de Mathématiques. »",
+      testName: "— Ndeye Natou Cissé, 1ère place · Olympiade de Mathématiques 2025",
       footer: "© 2026 ViteMaths · Le soutien scolaire simplifié",
       whatsappTrial: "Bonjour ! Je suis intéressé(e) par le cours d'essai GRATUIT d'une heure en mathématiques. Pouvez-vous me donner plus d'informations ?",
       whatsappNormal: "Bonjour ! Je suis intéressé(e) par des cours de mathématiques via ViteMaths. Pouvez-vous me donner plus de détails ?"
@@ -270,29 +357,34 @@
     currentLang = lang;
     const t = translations[lang];
 
-    // Update language button states
     document.getElementById("lang-en").classList.toggle("active", lang === "en");
     document.getElementById("lang-fr").classList.toggle("active", lang === "fr");
 
-    // Update text content
     document.getElementById("title").innerText = t.title;
     document.getElementById("subtitle").innerText = t.subtitle;
     document.getElementById("section1-title").innerText = t.section1Title;
-    document.getElementById("section1-text").innerHTML = t.section1Text; // Changed to innerHTML for <strong> tag
+    document.getElementById("section1-text").innerHTML = t.section1Text;
     document.getElementById("section2-title").innerText = t.section2Title;
-    
-    // Update list items
+
     const listElement = document.getElementById("section2-list");
     listElement.innerHTML = t.section2List.map(item => `<li>${item}</li>`).join('');
-    
+
     document.getElementById("section3-title").innerText = t.section3Title;
     document.getElementById("section3-text").innerText = t.section3Text;
     document.getElementById("enroll-btn").innerText = t.enroll;
     document.getElementById("trial-btn").innerText = t.trial;
     document.getElementById("contact-btn").innerText = t.contact;
+
+    document.getElementById("popin-title").innerText = t.popinTitle;
+    document.getElementById("popin-desc").innerText = t.popinDesc;
+    document.getElementById("popin-open-btn").innerText = t.popinBtn;
+    document.getElementById("test-title").innerText = t.testTitle;
+    document.getElementById("test-text").innerText = t.testText;
+    document.getElementById("test-name").innerText = t.testName;
+
+    // FIX: Only update the footer span, not the entire footer element
     document.getElementById("footer-text").innerText = t.footer;
 
-    // Update HTML lang attribute for accessibility
     document.documentElement.lang = lang;
   }
 
@@ -300,6 +392,25 @@
     const t = translations[currentLang];
     const message = encodeURIComponent(isTrial ? t.whatsappTrial : t.whatsappNormal);
     window.open(`https://wa.me/${phoneNumber}?text=${message}`, "_blank");
+  }
+
+  // FIX: openPopin and calcPrice are now properly inside the <script> tag
+  function openPopin() {
+    document.getElementById("popin-form").style.display = "block";
+    document.getElementById("popin-form").scrollIntoView({ behavior: "smooth" });
+  }
+
+  function calcPrice() {
+    const type = document.getElementById("type").value;
+    const dur = document.getElementById("duration").value;
+
+    let price = 0;
+    if (type === "online" && dur === "1") price = 8000;
+    if (type === "online" && dur === "2") price = 12000;
+    if (type === "home" && dur === "1") price = 10000;
+    if (type === "home" && dur === "2") price = 15000;
+
+    document.getElementById("price").innerText = price.toLocaleString() + " CFA";
   }
 
   // Initialize on page load
