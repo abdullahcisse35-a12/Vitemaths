@@ -52,6 +52,12 @@
       .buttons { flex-direction:column; }
       .btn { width:100%; box-sizing:border-box; }
     }
+
+    /* Enroll form shared input style */
+    .enroll-input {
+      display:block; width:100%; padding:10px; margin-bottom:12px;
+      border:1px solid #ddd; border-radius:6px; font-size:1rem; box-sizing:border-box;
+    }
   </style>
 </head>
 <body>
@@ -91,10 +97,54 @@
     <h2 id="section3-title">Get Started</h2>
     <p id="section3-text">Need help before exams? Book a session or try a free trial class today.</p>
     <div class="buttons">
-      <a href="https://docs.google.com/forms/d/1nMMs2mtFySX22DG2Ys_CnKKEecU7sFDBWn90CiEIGMo/viewform"
-         class="btn btn-primary" target="_blank" id="enroll-btn">Enroll Now</a>
+      <button class="btn btn-primary" onclick="openEnroll()" id="enroll-btn">Enroll Now</button>
       <a href="#" class="btn btn-secondary" onclick="sendWhatsApp(true); return false;" id="trial-btn">Free 1-Hour Trial</a>
       <a href="#" class="btn btn-outline" onclick="sendWhatsApp(false); return false;" id="contact-btn">Contact on WhatsApp</a>
+    </div>
+  </div>
+
+  <!-- ENROLL CARD -->
+  <div class="card" id="enroll-card" style="display:none;">
+    <h2 id="enroll-title">Enroll Now</h2>
+    <p id="enroll-desc">Choose your plan — the price updates automatically.</p>
+
+    <label id="e-name-label" style="display:block;font-weight:bold;margin-bottom:4px;">Student Name</label>
+    <input type="text" id="e-name" placeholder="Full name" class="enroll-input">
+
+    <label id="e-phone-label" style="display:block;font-weight:bold;margin-bottom:4px;">Phone (WhatsApp)</label>
+    <input type="tel" id="e-phone" placeholder="+221..." class="enroll-input">
+
+    <label id="e-address-label" style="display:block;font-weight:bold;margin-bottom:4px;">Address (if in-person)</label>
+    <input type="text" id="e-address" placeholder="Your address" class="enroll-input">
+
+    <label id="e-type-label" style="display:block;font-weight:bold;margin-bottom:4px;">Class Type</label>
+    <select id="e-type" onchange="calcEnrollPrice()" class="enroll-input">
+      <option value="online" id="e-opt-online">Online</option>
+      <option value="home" id="e-opt-home">In Person</option>
+    </select>
+
+    <label id="e-duration-label" style="display:block;font-weight:bold;margin-bottom:4px;">Hours Per Session</label>
+    <select id="e-duration" onchange="calcEnrollPrice()" class="enroll-input">
+      <option value="1" id="e-opt-1h">1 Hour / Session</option>
+      <option value="2" id="e-opt-2h">2 Hours / Session</option>
+    </select>
+
+    <label id="e-months-label" style="display:block;font-weight:bold;margin-bottom:4px;">Subscription Length</label>
+    <select id="e-months" onchange="calcEnrollPrice()" class="enroll-input">
+      <option value="1"  id="e-opt-1m">1 Month</option>
+      <option value="3"  id="e-opt-3m">3 Months</option>
+      <option value="6"  id="e-opt-6m">6 Months</option>
+      <option value="12" id="e-opt-12m">1 Year</option>
+    </select>
+
+    <h3 id="enroll-price" style="font-size:1.6rem;font-weight:bold;color:#1e40af;margin:14px 0 4px;">55 000 CFA</h3>
+    <p id="enroll-price-note" style="color:#666;font-size:0.88rem;margin-bottom:16px;"></p>
+
+    <button class="btn btn-primary" id="e-submit-btn" onclick="submitEnroll()" style="width:100%;box-sizing:border-box;">
+      Confirm Enrollment
+    </button>
+    <div class="success-banner" id="enrollSuccessBanner">
+      <span id="enrollSuccessText">Enrollment received! We'll contact you shortly to confirm.</span>
     </div>
   </div>
 
@@ -162,7 +212,7 @@
 </footer>
 
 <script>
-  const WA_NUMBER = "221785757406";
+  const WA_NUMBER = "221710051038";
   const FORMSPREE_ID = "xrbzwonv"; // wired to abdullahcisse35@gmail.com
 
   const translations = {
@@ -190,6 +240,15 @@
       footer: "© 2026 ViteMaths · Online tutoring made simple",
       whatsappTrial: "Hello! I'm interested in the FREE 1-hour math trial class. Could you give me more information?",
       whatsappNormal: "Hello! I'm interested in math tutoring through ViteMaths. Could you give me more details?",
+      enrollTitle: "Enroll Now",
+      enrollDesc: "Choose your plan — the price updates automatically.",
+      eNameLabel: "Student Name", ePhoneLabel: "Phone (WhatsApp)", eAddrLabel: "Address (if in-person)",
+      eTypeLabel: "Class Type", eDurLabel: "Hours Per Session", eMonthLabel: "Subscription Length",
+      eOptOnline: "Online", eOptHome: "In Person",
+      eOpt1h: "1 Hour / Session", eOpt2h: "2 Hours / Session",
+      eOpt1m: "1 Month", eOpt3m: "3 Months", eOpt6m: "6 Months", eOpt12m: "1 Year",
+      eSubmitBtn: "Confirm Enrollment",
+      enroll: "Enroll Now",
       whatsappBooking: (name, type, dur, day, time, price) =>
         `📚 New Pop-In Booking!\n\n• Name: ${name}\n• Type: ${type}\n• Duration: ${dur} hour(s)\n• Date: ${day}\n• Time: ${time}\n• Price: ${price} CFA`,
       alertName: "Please enter your name.",
@@ -221,6 +280,15 @@
       footer: "© 2026 ViteMaths · Le soutien scolaire simplifié",
       whatsappTrial: "Bonjour ! Je suis intéressé(e) par le cours d'essai GRATUIT d'une heure. Pouvez-vous me donner plus d'informations ?",
       whatsappNormal: "Bonjour ! Je suis intéressé(e) par des cours via ViteMaths. Pouvez-vous me donner plus de détails ?",
+      enrollTitle: "S'inscrire",
+      enrollDesc: "Choisissez votre formule — le prix se met à jour automatiquement.",
+      eNameLabel: "Nom de l'élève", ePhoneLabel: "Téléphone (WhatsApp)", eAddrLabel: "Adresse (si cours à domicile)",
+      eTypeLabel: "Type de cours", eDurLabel: "Heures par séance", eMonthLabel: "Durée d'abonnement",
+      eOptOnline: "En ligne", eOptHome: "À domicile",
+      eOpt1h: "1 heure / séance", eOpt2h: "2 heures / séance",
+      eOpt1m: "1 mois", eOpt3m: "3 mois", eOpt6m: "6 mois", eOpt12m: "1 an",
+      eSubmitBtn: "Confirmer l'inscription",
+      enroll: "S'inscrire",
       whatsappBooking: (name, type, dur, day, time, price) =>
         `📚 Nouvelle réservation Pop-In !\n\n• Nom : ${name}\n• Type : ${type}\n• Durée : ${dur} heure(s)\n• Date : ${day}\n• Heure : ${time}\n• Prix : ${price} CFA`,
       alertName: "Veuillez entrer votre nom.",
@@ -269,6 +337,25 @@
     document.getElementById("test-name").innerText = t.testName;
     document.getElementById("footer-text").innerText = t.footer;
     document.documentElement.lang = lang;
+    // Enroll form labels
+    if(t.enrollTitle)  document.getElementById("enroll-title").innerText  = t.enrollTitle;
+    if(t.enrollDesc)   document.getElementById("enroll-desc").innerText   = t.enrollDesc;
+    if(t.eNameLabel)   document.getElementById("e-name-label").innerText  = t.eNameLabel;
+    if(t.ePhoneLabel)  document.getElementById("e-phone-label").innerText = t.ePhoneLabel;
+    if(t.eAddrLabel)   document.getElementById("e-address-label").innerText = t.eAddrLabel;
+    if(t.eTypeLabel)   document.getElementById("e-type-label").innerText  = t.eTypeLabel;
+    if(t.eDurLabel)    document.getElementById("e-duration-label").innerText = t.eDurLabel;
+    if(t.eMonthLabel)  document.getElementById("e-months-label").innerText  = t.eMonthLabel;
+    if(t.eOptOnline)   document.getElementById("e-opt-online").innerText  = t.eOptOnline;
+    if(t.eOptHome)     document.getElementById("e-opt-home").innerText    = t.eOptHome;
+    if(t.eOpt1h)       document.getElementById("e-opt-1h").innerText      = t.eOpt1h;
+    if(t.eOpt2h)       document.getElementById("e-opt-2h").innerText      = t.eOpt2h;
+    if(t.eOpt1m)       document.getElementById("e-opt-1m").innerText      = t.eOpt1m;
+    if(t.eOpt3m)       document.getElementById("e-opt-3m").innerText      = t.eOpt3m;
+    if(t.eOpt6m)       document.getElementById("e-opt-6m").innerText      = t.eOpt6m;
+    if(t.eOpt12m)      document.getElementById("e-opt-12m").innerText     = t.eOpt12m;
+    if(t.eSubmitBtn)   document.getElementById("e-submit-btn").innerText  = t.eSubmitBtn;
+    calcEnrollPrice();
     calcPrice();
   }
 
@@ -358,6 +445,99 @@
     document.getElementById("f-address").value = "";
     document.getElementById("f-day").value = "";
     document.getElementById("f-time").value = "";
+  }
+
+
+  // ===== ENROLLMENT PRICING TABLE =====
+  // [months][type][hours] => price CFA
+  const ENROLL_PRICES = {
+    1:  { online: { 1: 55000,  2: 70000  }, home: { 1: 70000,  2: 80000  } },
+    3:  { online: { 1: 122000, 2: 170000 }, home: { 1: 160000, 2: 210000 } },
+    6:  { online: { 1: 210000, 2: 310000 }, home: { 1: 265000, 2: 400000 } },
+    12: { online: { 1: 410000, 2: 595000 }, home: { 1: 500000, 2: 780000 } },
+  };
+
+  const MONTH_LABELS = { en: {1:"1 Month",3:"3 Months",6:"6 Months",12:"1 Year"}, fr: {1:"1 mois",3:"3 mois",6:"6 mois",12:"1 an"} };
+
+  function openEnroll() {
+    const card = document.getElementById("enroll-card");
+    card.style.display = "block";
+    card.scrollIntoView({ behavior:"smooth" });
+    calcEnrollPrice();
+  }
+
+  function calcEnrollPrice() {
+    const type   = document.getElementById("e-type").value;
+    const dur    = parseInt(document.getElementById("e-duration").value);
+    const months = parseInt(document.getElementById("e-months").value);
+    const price  = ENROLL_PRICES[months][type][dur];
+    document.getElementById("enroll-price").innerText = price.toLocaleString() + " CFA";
+    const perMonth = Math.round(price / months).toLocaleString();
+    const isEn = currentLang === "en";
+    const mLabel = MONTH_LABELS[currentLang][months];
+    const typeLabel = type === "online" ? (isEn ? "Online" : "En ligne") : (isEn ? "In Person" : "À domicile");
+    const durLabel  = dur === 1 ? (isEn ? "1h/session" : "1h/séance") : (isEn ? "2h/session" : "2h/séance");
+    document.getElementById("enroll-price-note").innerText =
+      isEn
+        ? `${mLabel} · ${typeLabel} · ${durLabel} · ~${perMonth} CFA/month`
+        : `${mLabel} · ${typeLabel} · ${durLabel} · ~${perMonth} CFA/mois`;
+    return price;
+  }
+
+  async function submitEnroll() {
+    const t       = translations[currentLang];
+    const name    = document.getElementById("e-name").value.trim();
+    const phone   = document.getElementById("e-phone").value.trim();
+    const address = document.getElementById("e-address").value.trim();
+    const type    = document.getElementById("e-type").value;
+    const dur     = document.getElementById("e-duration").value;
+    const months  = document.getElementById("e-months").value;
+    const price   = calcEnrollPrice();
+
+    if (!name)  { alert(t.alertName);  return; }
+    if (!phone) { alert(t.alertPhone); return; }
+
+    const btn = document.getElementById("e-submit-btn");
+    btn.disabled = true;
+    btn.innerHTML = '<span class="btn-spinner"></span> ...';
+
+    const isEn = currentLang === "en";
+    const typeLabel   = type === "online" ? (isEn ? "Online" : "En ligne") : (isEn ? "In Person" : "À domicile");
+    const durLabel    = dur === "1" ? (isEn ? "1h/session" : "1h/séance") : (isEn ? "2h/session" : "2h/séance");
+    const monthLabel  = MONTH_LABELS[currentLang][parseInt(months)];
+
+    // 1) Formspree email
+    try {
+      const fd = new FormData();
+      fd.append("Type", "Enrollment");
+      fd.append("Nom / Name", name);
+      fd.append("Téléphone / Phone", phone);
+      fd.append("Adresse / Address", address || "—");
+      fd.append("Plan", `${monthLabel} · ${typeLabel} · ${durLabel}`);
+      fd.append("Prix / Price", price.toLocaleString() + " CFA");
+      fd.append("_subject", `📚 New Enrollment – ${name} – ${monthLabel} ${typeLabel}`);
+      fd.append("_replyto", phone);
+      await fetch(`https://formspree.io/f/xrbzwonv`, {
+        method:"POST", body:fd, headers:{Accept:"application/json"}
+      });
+    } catch(e) { console.warn("Email failed:", e); }
+
+    // 2) WhatsApp notification
+    const waMsg = isEn
+      ? `📚 New Enrollment!\n\n• Name: ${name}\n• Phone: ${phone}\n• Address: ${address||"—"}\n• Plan: ${monthLabel} · ${typeLabel} · ${durLabel}\n• Price: ${price.toLocaleString()} CFA`
+      : `📚 Nouvelle inscription !\n\n• Nom : ${name}\n• Tél : ${phone}\n• Adresse : ${address||"—"}\n• Plan : ${monthLabel} · ${typeLabel} · ${durLabel}\n• Prix : ${price.toLocaleString()} CFA`;
+    window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(waMsg)}`, "_blank");
+
+    // 3) Success
+    btn.disabled = false;
+    btn.innerText = isEn ? "Confirm Enrollment" : "Confirmer l'inscription";
+    document.getElementById("enrollSuccessBanner").classList.add("show");
+    document.getElementById("enrollSuccessText").innerText = isEn
+      ? "✅ Enrollment received! We'll contact you on WhatsApp to confirm."
+      : "✅ Inscription reçue ! Nous vous contacterons sur WhatsApp pour confirmer.";
+    document.getElementById("e-name").value = "";
+    document.getElementById("e-phone").value = "";
+    document.getElementById("e-address").value = "";
   }
 
   setLanguage(currentLang);
