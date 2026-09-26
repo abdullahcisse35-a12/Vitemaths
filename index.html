@@ -24,6 +24,12 @@
     .lang-toggle button { margin:0 5px; padding:8px 14px; border-radius:6px; border:none; cursor:pointer; font-weight:bold; background:rgba(255,255,255,0.2); color:white; transition:all 0.2s ease; }
     .lang-toggle button:hover { background:rgba(255,255,255,0.3); }
     .lang-toggle button.active { background:white; color:#2563eb; }
+    .hero-cta { margin-top:25px; }
+    .btn-hero { font-size:1.15rem; padding:18px 34px; box-shadow:0 8px 20px rgba(0,0,0,0.18); }
+    .hero-note { font-size:0.9rem; margin-top:10px; opacity:0.9; }
+    .container { display:flex; flex-direction:column; }
+    .nudge { font-size:0.88rem; color:#555; background:#f8fafc; border:1px dashed #cbd5e1; border-radius:8px; padding:10px 14px; margin:14px 0 18px; }
+    .nudge a { color:#2563eb; font-weight:bold; cursor:pointer; text-decoration:underline; }
 
     /* Form styles */
     #popin-form input,
@@ -82,6 +88,10 @@
 <header>
   <h1 id="title">ViteMaths</h1>
   <p id="subtitle">Professional math tutoring with degree-qualified tutors — fast, flexible, and exam-focused.</p>
+  <div class="hero-cta">
+    <a href="#" class="btn btn-secondary btn-hero" onclick="sendWhatsApp(true); return false;" id="hero-trial-btn">Book Your Free Trial</a>
+    <p class="hero-note" id="hero-note">No payment required — meet your tutor in a free 1-hour session.</p>
+  </div>
   <div class="lang-toggle">
     <button onclick="setLanguage('en')" id="lang-en" class="active">English</button>
     <button onclick="setLanguage('fr')" id="lang-fr">Français</button>
@@ -90,7 +100,7 @@
 
 <div class="container">
 
-  <div class="card">
+  <div class="card" id="card-who" style="order:1;">
     <h2 id="section1-title">Who We Are</h2>
     <p id="section1-text">
       ViteMaths connects students with experienced tutors who hold a degree in mathematics
@@ -100,7 +110,7 @@
     </p>
   </div>
 
-  <div class="card">
+  <div class="card" id="card-what" style="order:2;">
     <h2 id="section2-title">What We Help With</h2>
     <ul id="section2-list">
       <li>Middle &amp; High School Mathematics</li>
@@ -110,20 +120,22 @@
     </ul>
   </div>
 
-  <div class="card">
+  <div class="card" id="card-get-started" style="order:4;">
     <h2 id="section3-title">Get Started</h2>
-    <p id="section3-text">Need help before exams? Book a session or try a free trial class today.</p>
+    <p id="section3-text">See if we're the right fit — book a completely free 1-hour trial session with your tutor.</p>
     <div class="buttons">
-      <button class="btn btn-primary" onclick="openEnroll()" id="enroll-btn">Enroll Now</button>
       <a href="#" class="btn btn-secondary" onclick="sendWhatsApp(true); return false;" id="trial-btn">Free 1-Hour Trial</a>
       <a href="#" class="btn btn-outline" onclick="sendWhatsApp(false); return false;" id="contact-btn">Contact on WhatsApp</a>
     </div>
   </div>
 
   <!-- ENROLL CARD -->
-  <div class="card" id="enroll-card" style="display:none;">
-    <h2 id="enroll-title">Enroll Now</h2>
-    <p id="enroll-desc">Choose your plan — the price updates automatically.</p>
+  <div class="card" id="enroll-card" style="order:6;">
+    <h2 id="enroll-title">Ready for Ongoing Lessons?</h2>
+    <p id="enroll-desc">Loved your free trial? Choose your plan below — the price updates automatically.</p>
+    <button class="btn btn-outline" onclick="openEnroll()" id="enroll-open-btn">View Plans &amp; Enroll</button>
+
+    <div id="enroll-form" style="display:none; margin-top:20px;">
 
     <label id="e-name-label" style="display:block;font-weight:bold;margin-bottom:4px;">Student Name</label>
     <input type="text" id="e-name" placeholder="Full name" class="enroll-input">
@@ -171,13 +183,15 @@
     <div class="success-banner" id="enrollSuccessBanner">
       <span id="enrollSuccessText">Enrollment received! We'll contact you shortly to confirm.</span>
     </div>
+    </div>
   </div>
 
   <!-- POP-IN CARD -->
-  <div class="card">
+  <div class="card" id="card-popin" style="order:5;">
     <h2 id="popin-title">Quick Pop-In Class</h2>
     <p id="popin-desc">Book a one-time session instantly. Choose duration and type — price shown automatically.</p>
-    <button class="btn btn-primary" onclick="openPopin()" id="popin-open-btn">Book Pop-In Class</button>
+    <p class="nudge" id="popin-trial-nudge">New to ViteMaths? We recommend starting with a <a onclick="sendWhatsApp(true)">free trial</a> first.</p>
+    <button class="btn btn-outline" onclick="openPopin()" id="popin-open-btn">Book Pop-In Class</button>
 
     <div id="popin-form" style="display:none; margin-top:20px;">
 
@@ -221,7 +235,7 @@
     </div>
   </div>
 
-  <div class="card">
+  <div class="card" id="card-trust" style="order:3;">
     <h2 id="test-title">What Students Say</h2>
     <p id="test-text">
       "I used to struggle with math and had trouble grasping concepts. The one-on-one sessions with these tutors — who are certified with degrees — really helped me because it's such a focused setting. I went from having a 78 average all the way to winning Math Olympiad awards. I couldn't have done it without ViteMaths."
@@ -1072,8 +1086,11 @@ UL4Q10vZYWnNPQbHb0lMaGyGkZ6qx1UfUnJPxrKJVlbYQq5Nn//Z"
       section2Title: "What We Help With",
       section2List: ["Middle & High School Mathematics","IB, A-Levels, SAT, AP Math","Calculus, Algebra, Geometry, Trigonometry","Exam preparation & last-minute revision"],
       section3Title: "Get Started",
-      section3Text: "Need help before exams? Book a session or try a free trial class today.",
+      section3Text: "See if we're the right fit — book a completely free 1-hour trial session with your tutor.",
       enroll: "Enroll Now", trial: "Free 1-Hour Trial", contact: "Contact on WhatsApp",
+      heroTrialBtn: "Book Your Free Trial",
+      heroNote: "No payment required — meet your tutor in a free 1-hour session.",
+      popinTrialNudge: 'New to ViteMaths? We recommend starting with a <a onclick="sendWhatsApp(true)">free trial</a> first.',
       popinTitle: "Quick Pop-In Class",
       popinDesc: "Book a one-time session instantly. Choose duration and type — price shown automatically.",
       popinBtn: "Book Pop-In Class",
@@ -1088,8 +1105,8 @@ UL4Q10vZYWnNPQbHb0lMaGyGkZ6qx1UfUnJPxrKJVlbYQq5Nn//Z"
       footer: "© 2026 ViteMaths · Online tutoring made simple",
       whatsappTrial: "Hello! I'm interested in the FREE 1-hour math trial class. Could you give me more information?",
       whatsappNormal: "Hello! I'm interested in math tutoring through ViteMaths. Could you give me more details?",
-      enrollTitle: "Enroll Now",
-      enrollDesc: "Choose your plan — the price updates automatically.",
+      enrollTitle: "Ready for Ongoing Lessons?",
+      enrollDesc: "Loved your free trial? Choose your plan below — the price updates automatically.",
       eNameLabel: "Student Name", ePhoneLabel: "Phone (WhatsApp)", eAddrLabel: "Address (if in-person)",
       eTypeLabel: "Class Type", eDurLabel: "Hours Per Session", eMonthLabel: "Subscription Length",
       eOptOnline: "Online", eOptHome: "In Person",
@@ -1100,6 +1117,7 @@ UL4Q10vZYWnNPQbHb0lMaGyGkZ6qx1UfUnJPxrKJVlbYQq5Nn//Z"
       eLangEn: "English",
       eLangFr: "French / Français",
       eSubmitBtn: "Confirm Enrollment",
+      eOpenBtn: "View Plans & Enroll",
       whatsappBooking: (name, type, dur, day, time, price) =>
         `📚 New Pop-In Booking!\n\n• Name: ${name}\n• Type: ${type}\n• Duration: ${dur} hour(s)\n• Date: ${day}\n• Time: ${time}\n• Price: ${price} CFA`,
       alertName: "Please enter your name.",
@@ -1115,8 +1133,11 @@ UL4Q10vZYWnNPQbHb0lMaGyGkZ6qx1UfUnJPxrKJVlbYQq5Nn//Z"
       section2Title: "Nos domaines",
       section2List: ["Mathématiques collège & lycée","IB, A-Levels, SAT, AP Math","Calcul, Algèbre, Géométrie, Trigonométrie","Préparation aux examens & révisions de dernière minute"],
       section3Title: "Commencer",
-      section3Text: "Besoin d'aide avant les examens ? Réservez un cours ou essayez une séance gratuite.",
+      section3Text: "Vérifiez si nous sommes faits pour vous — réservez une séance d'essai entièrement gratuite d'une heure avec votre tuteur.",
       enroll: "S'inscrire", trial: "Essai gratuit d'1 heure", contact: "Contacter sur WhatsApp",
+      heroTrialBtn: "Réserver l'essai gratuit",
+      heroNote: "Aucun paiement requis — rencontrez votre tuteur lors d'une séance gratuite d'1 heure.",
+      popinTrialNudge: 'Nouveau chez ViteMaths ? Nous recommandons de commencer par un <a onclick="sendWhatsApp(true)">essai gratuit</a>.',
       popinTitle: "Cours ponctuel",
       popinDesc: "Réservez une séance unique instantanément. Choisissez la durée et le type — le prix s'affiche automatiquement.",
       popinBtn: "Réserver un cours",
@@ -1131,8 +1152,8 @@ UL4Q10vZYWnNPQbHb0lMaGyGkZ6qx1UfUnJPxrKJVlbYQq5Nn//Z"
       footer: "© 2026 ViteMaths · Le soutien scolaire simplifié",
       whatsappTrial: "Bonjour ! Je suis intéressé(e) par le cours d'essai GRATUIT d'une heure. Pouvez-vous me donner plus d'informations ?",
       whatsappNormal: "Bonjour ! Je suis intéressé(e) par des cours via ViteMaths. Pouvez-vous me donner plus de détails ?",
-      enrollTitle: "S'inscrire",
-      enrollDesc: "Choisissez votre formule — le prix se met à jour automatiquement.",
+      enrollTitle: "Prêt pour un suivi régulier ?",
+      enrollDesc: "Vous avez aimé votre essai gratuit ? Choisissez votre formule ci-dessous — le prix se met à jour automatiquement.",
       eNameLabel: "Nom de l'élève", ePhoneLabel: "Téléphone (WhatsApp)", eAddrLabel: "Adresse (si cours à domicile)",
       eTypeLabel: "Type de cours", eDurLabel: "Heures par séance", eMonthLabel: "Durée d'abonnement",
       eOptOnline: "En ligne", eOptHome: "À domicile",
@@ -1143,6 +1164,7 @@ UL4Q10vZYWnNPQbHb0lMaGyGkZ6qx1UfUnJPxrKJVlbYQq5Nn//Z"
       eLangEn: "Anglais / English",
       eLangFr: "Français",
       eSubmitBtn: "Confirmer l'inscription",
+      eOpenBtn: "Voir les formules",
       whatsappBooking: (name, type, dur, day, time, price) =>
         `📚 Nouvelle réservation Pop-In !\n\n• Nom : ${name}\n• Type : ${type}\n• Durée : ${dur} heure(s)\n• Date : ${day}\n• Heure : ${time}\n• Prix : ${price} CFA`,
       alertName: "Veuillez entrer votre nom.",
@@ -1167,11 +1189,13 @@ UL4Q10vZYWnNPQbHb0lMaGyGkZ6qx1UfUnJPxrKJVlbYQq5Nn//Z"
     document.getElementById("section2-list").innerHTML = t.section2List.map(i=>`<li>${i}</li>`).join('');
     document.getElementById("section3-title").innerText = t.section3Title;
     document.getElementById("section3-text").innerText = t.section3Text;
-    document.getElementById("enroll-btn").innerText = t.enroll;
+    document.getElementById("hero-trial-btn").innerText = t.heroTrialBtn;
+    document.getElementById("hero-note").innerText = t.heroNote;
     document.getElementById("trial-btn").innerText = t.trial;
     document.getElementById("contact-btn").innerText = t.contact;
     document.getElementById("popin-title").innerText = t.popinTitle;
     document.getElementById("popin-desc").innerText = t.popinDesc;
+    document.getElementById("popin-trial-nudge").innerHTML = t.popinTrialNudge;
     document.getElementById("popin-open-btn").innerText = t.popinBtn;
     document.getElementById("name-label").innerText = t.nameLabel;
     document.getElementById("phone-label").innerText = t.phoneLabel;
@@ -1209,6 +1233,7 @@ UL4Q10vZYWnNPQbHb0lMaGyGkZ6qx1UfUnJPxrKJVlbYQq5Nn//Z"
     if(t.eOpt6m)       document.getElementById("e-opt-6m").innerText      = t.eOpt6m;
     if(t.eOpt12m)      document.getElementById("e-opt-12m").innerText     = t.eOpt12m;
     if(t.eSubmitBtn)   document.getElementById("e-submit-btn").innerText  = t.eSubmitBtn;
+    if(t.eOpenBtn)     document.getElementById("enroll-open-btn").innerText = t.eOpenBtn;
     // Language preference field
     if(t.eLangLabel)   document.getElementById("e-lang-label").innerText  = t.eLangLabel;
     if(t.eLangNote)    document.getElementById("e-lang-note").innerText   = t.eLangNote;
@@ -1316,9 +1341,9 @@ UL4Q10vZYWnNPQbHb0lMaGyGkZ6qx1UfUnJPxrKJVlbYQq5Nn//Z"
   const MONTH_LABELS = { en: {1:"1 Month",3:"3 Months",6:"6 Months",12:"1 Year"}, fr: {1:"1 mois",3:"3 mois",6:"6 mois",12:"1 an"} };
 
   function openEnroll() {
-    const card = document.getElementById("enroll-card");
-    card.style.display = "block";
-    card.scrollIntoView({ behavior:"smooth" });
+    const form = document.getElementById("enroll-form");
+    form.style.display = "block";
+    form.scrollIntoView({ behavior:"smooth" });
     onEnrollTypeChange();
   }
 
